@@ -3,6 +3,8 @@ React = require 'react'
 art = require 'react-art'
 caffeine = require 'react-caffeine'
 
+require './vertex'
+
 
 caffeine.register
   HitArea:
@@ -21,9 +23,11 @@ caffeine.register
             @Shape
               d: $.createPath origin, @props.hitArea.points
               fill: "#ff000055"
-          for p in @props.hitArea.points
-            @Circle
+
+          for p, i in @props.hitArea.points
+            @Vertex
               x: p.x + origin.x
               y: p.y + origin.y
-              radius: 5
-              fill: "#ff0000ff"
+              toolBox: @props.toolBox
+              hitArea: @props.hitArea
+              target: i

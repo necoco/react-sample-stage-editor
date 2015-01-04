@@ -2,7 +2,7 @@
 React = require 'react'
 caffeine = require 'react-caffeine'
 
-LineTool = require './line-tool'
+ToolBox = require './tool-box'
 
 require './hit-area'
 require './image'
@@ -15,14 +15,17 @@ caffeine.register
       ev.preventDefault()
       
     handleMouseUp: (ev)->
-      @forceUpdate() if @state.tool.up @origin(), ev
+      @forceUpdate() if @currentTool().up @origin(), ev
 
     handleMouseDown: (ev)->
-      @forceUpdate() if @state.tool.down @origin(), ev
+      @forceUpdate() if @currentTool().down @origin(), ev
 
     handleMouseMove: (ev)->
-      @forceUpdate() if @state.tool.move @origin(), ev
+      @forceUpdate() if @currentTool().move @origin(), ev
     
+    currentTool: ()->
+      @state.toolBox.currentTool()
+      
     origin: ()->
       s = @refs.image.state
       {x: s.left, y: s.top}
@@ -39,10 +42,10 @@ caffeine.register
         reader.readAsDataURL file
 
     getInitialState: ()->
-      {src: null, tool: new LineTool(), editing: false}
+      {src: null, toolBox: new ToolBox(), editing: false}
         
     render: ->
-      @state.tool.setHitAreaList @props.hitAreaList
+      @state.toolBox.setHitAreaList @props.hitAreaList
       caffeine @, ($)->
         @div
           onDrop: $.handleDrop
@@ -69,4 +72,5 @@ caffeine.register
                 for hitArea in @props.hitAreaList
                   @HitArea
                     hitArea: hitArea
+                    toolBox: $.state.toolBox
                     origin: $.origin()

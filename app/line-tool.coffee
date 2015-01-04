@@ -1,8 +1,10 @@
 #line-tool.coffee
 
+BaseTool = require './tool'
+
 CLOSE_DISTANCE = 10
 
-class LineTool
+class LineTool extends BaseTool
   constructor: ()->
     @current = @newHitArea()
     
@@ -22,8 +24,6 @@ class LineTool
   modifyPoint: (origin, ev)->
     @current.points[@current.points.length-1] = @computeDelta origin, ev    
 
-  computeDelta: (b, ev)->
-    {x: ev.clientX - b.x, y: ev.clientY - b.y}
 
   nearStartPoint: (p)->
     if @current.points[2]?
@@ -54,6 +54,8 @@ class LineTool
       @clear()
     return true
 
+  isBusy: ()->
+    @current.points.length != 0
 
   down: (origin, ev)->
     if @current.points.length == 0
