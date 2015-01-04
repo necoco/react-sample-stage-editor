@@ -6,6 +6,9 @@ class LineTool
   constructor: ()->
     @current = @newHitArea()
     
+  setHitAreaList: (list)->
+    @hitAreaList = list
+    
   clear: ()->
     @current = @newHitArea()
     
@@ -47,9 +50,17 @@ class LineTool
     else
       @addPoint origin, ev
 
+    if @current.closed
+      @clear()
+    return true
+
+
   down: (origin, ev)->
     if @current.points.length == 0
+      @hitAreaList.push @hitArea()
       @addPoint origin, ev
+      
+    return true
     
 
 module.exports = LineTool

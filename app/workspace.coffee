@@ -15,24 +15,13 @@ caffeine.register
       ev.preventDefault()
       
     handleMouseUp: (ev)->
-      tool = @state.tool
-      tool.up @origin(), ev
-      if tool.hitArea().closed
-        tool.clear()
-        @setState editing: false
+      @forceUpdate() if @state.tool.up @origin(), ev
 
     handleMouseDown: (ev)->
-      tool = @state.tool
-      tool.down @origin(), ev
-     
-      unless @state.editing
-        @props.hitAreaList.push tool.hitArea()
-        @setState editing: true
-      @forceUpdate()
+      @forceUpdate() if @state.tool.down @origin(), ev
 
     handleMouseMove: (ev)->
-      tool = @state.tool
-      @forceUpdate() if tool.move @origin(), ev
+      @forceUpdate() if @state.tool.move @origin(), ev
     
     origin: ()->
       s = @refs.image.state
@@ -53,7 +42,7 @@ caffeine.register
       {src: null, tool: new LineTool(), editing: false}
         
     render: ->
-      tool = @state.tool
+      @state.tool.setHitAreaList @props.hitAreaList
       caffeine @, ($)->
         @div
           onDrop: $.handleDrop
